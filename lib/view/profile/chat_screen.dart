@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
         title: Text(
-          "Chat Assistant",
+          "Asistente de Chat",
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "Hi Daniel, I’m Fin 😎",
+                              "Hola Daniel, soy Fin 😎",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -97,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "I’m here to help your personal\nfinance stuff easier 💰",
+                              "Estoy aquí para hacer tus finanzas\npersonales más fáciles 💰",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -123,7 +123,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "So, what can I help?",
+                              "¿En qué puedo ayudarte?",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -150,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "How to spend less?",
+                                  "¿Cómo gastar menos?",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
@@ -178,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "I can help you with that",
+                              "Puedo ayudarte con eso",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -206,7 +206,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Introducing Finpay card! 🎉",
+                                  "¡Presentando la tarjeta Finpay! 🎉",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
@@ -243,7 +243,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "A smart debit and credit card that can help save more money! 💳",
+                              "¡Una tarjeta de débito y crédito inteligente que puede ayudarte a ahorrar más dinero! 💳",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
@@ -270,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "more info 👀",
+                                "más información 👀",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
