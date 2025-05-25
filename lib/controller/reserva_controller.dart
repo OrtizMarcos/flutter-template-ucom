@@ -1,6 +1,7 @@
 import 'package:finpay/model/sitema_reservas.dart';
 import 'package:get/get.dart';
 import 'package:finpay/api/local.db.service.dart';
+import 'package:finpay/controller/home_controller.dart';
 
 class ReservaController extends GetxController {
   RxList<Piso> pisos = <Piso>[].obs;
@@ -102,6 +103,10 @@ class ReservaController extends GetxController {
         lugares[index]['estado'] = "RESERVADO";
         await db.saveAll("lugares.json", lugares);
       }
+
+      // Actualizar el HomeController
+      final homeController = Get.find<HomeController>();
+      await homeController.cargarReservasActivas();
 
       return true;
     } catch (e) {

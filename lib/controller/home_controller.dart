@@ -15,52 +15,25 @@ class HomeController extends GetxController {
   RxBool isYear = false.obs;
   RxBool isAdd = false.obs;
   RxList<Pago> pagosPrevios = <Pago>[].obs;
+  RxList<Reserva> reservasActivas = <Reserva>[].obs;
 
   customInit() async {
-    cargarPagosPrevios();
+    await cargarPagosPrevios();
+    await cargarReservasActivas();
     isWeek.value = true;
     isMonth.value = false;
     isYear.value = false;
-    transactionList = [
-      TransactionModel(
-        Theme.of(Get.context!).textTheme.titleLarge!.color,
-        DefaultImages.transaction4,
-        "Apple Store",
-        "iPhone 12 Case",
-        "- \$120,90",
-        "09:39 AM",
-      ),
-      TransactionModel(
-        HexColor(AppTheme.primaryColorString!).withOpacity(0.10),
-        DefaultImages.transaction3,
-        "Ilya Vasil",
-        "Wise • 5318",
-        "- \$50,90",
-        "05:39 AM",
-      ),
-      TransactionModel(
-        Theme.of(Get.context!).textTheme.titleLarge!.color,
-        "",
-        "Burger King",
-        "Cheeseburger XL",
-        "- \$5,90",
-        "09:39 AM",
-      ),
-      TransactionModel(
-        HexColor(AppTheme.primaryColorString!).withOpacity(0.10),
-        DefaultImages.transaction1,
-        "Claudia Sarah",
-        "Finpay Card • 5318",
-        "- \$50,90",
-        "04:39 AM",
-      ),
-    ];
   }
 
   Future<void> cargarPagosPrevios() async {
     final db = LocalDBService();
     final data = await db.getAll("pagos.json");
-
     pagosPrevios.value = data.map((json) => Pago.fromJson(json)).toList();
+  }
+
+  Future<void> cargarReservasActivas() async {
+    final db = LocalDBService();
+    final data = await db.getAll("reservas.json");
+    reservasActivas.value = data.map((json) => Reserva.fromJson(json)).toList();
   }
 }

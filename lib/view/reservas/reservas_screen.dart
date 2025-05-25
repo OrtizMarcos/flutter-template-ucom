@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:finpay/controller/reserva_controller.dart';
 import 'package:finpay/model/sitema_reservas.dart';
 import 'package:finpay/utils/utiles.dart';
+import 'package:finpay/controller/home_controller.dart';
 
 class ReservaScreen extends StatelessWidget {
   final controller = Get.put(ReservaController());
@@ -464,6 +465,9 @@ class ReservaScreen extends StatelessWidget {
                           );
 
                           await Future.delayed(const Duration(milliseconds: 2000));
+                          
+                          final homeController = Get.find<HomeController>();
+                          await homeController.cargarReservasActivas();
                           Get.back();
                         } else {
                           Get.snackbar(
