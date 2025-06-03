@@ -19,5 +19,54 @@
     "modelo": "Fiesta",
     "chasis": "CH987654",
     "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "JKL012",
+    "marca": "Volkswagen",
+    "modelo": "Golf",
+    "chasis": "CH246810",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "MNO345",
+    "marca": "Honda",
+    "modelo": "Civic",
+    "chasis": "CH135792",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "PQR678",
+    "marca": "Hyundai",
+    "modelo": "i30",
+    "chasis": "CH864209",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "STU901",
+    "marca": "Renault",
+    "modelo": "Clio",
+    "chasis": "CH753159",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "VWX234",
+    "marca": "Peugeot",
+    "modelo": "208",
+    "chasis": "CH951357",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "YZA567",
+    "marca": "Fiat",
+    "modelo": "Argo",
+    "chasis": "CH852456",
+    "clienteId": "cliente_1"
+  },
+  {
+    "chapa": "BCD890",
+    "marca": "Kia",
+    "modelo": "Sportage",
+    "chasis": "CH741852",
+    "clienteId": "cliente_1"
   }
 ]
