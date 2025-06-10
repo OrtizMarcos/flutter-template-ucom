@@ -14,6 +14,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../pagos/pagos_screen.dart';
+import '../autos/autos_screen.dart';
 
 class HomeView extends StatelessWidget {
   final HomeController homeController;
@@ -224,6 +225,21 @@ class HomeView extends StatelessWidget {
                       hoverColor: Colors.transparent,
                       splashColor: Colors.transparent,
                       onTap: () {
+                        Get.to(() => AutosScreen(),
+                            transition: Transition.downToUp,
+                            duration: const Duration(milliseconds: 500));
+                      },
+                      child: circleCard(
+                        icon: Icons.directions_car,
+                        title: "Autos",
+                      ),
+                    ),
+                    InkWell(
+                      focusColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
                         Get.to(
                           () => ReservaScreen(),
                           binding: BindingsBuilder(() {
@@ -278,18 +294,35 @@ class HomeView extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                     ),
                               ),
-                              Obx(() => DropdownButton<String>(
-                                value: homeController.filtroReservas.value,
-                                onChanged: (value) {
-                                  if (value != null) homeController.filtroReservas.value = value;
+                              Obx(() => ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.filter_list),
+                                label: Text(_filtroLabel(homeController.filtroReservas.value)),
+                                onPressed: () async {
+                                  final selected = await showDialog<String>(
+                                    context: context,
+                                    builder: (context) => SimpleDialog(
+                                      title: const Text('Filtrar reservas'),
+                                      children: [
+                                        _buildFiltroOption(context, homeController, 'TODOS', 'Todos'),
+                                        _buildFiltroOption(context, homeController, 'DIA', 'Día'),
+                                        _buildFiltroOption(context, homeController, 'SEMANA', 'Semana'),
+                                        _buildFiltroOption(context, homeController, 'MES', 'Mes'),
+                                        _buildFiltroOption(context, homeController, 'AÑO', 'Año'),
+                                      ],
+                                    ),
+                                  );
+                                  if (selected != null) {
+                                    homeController.filtroReservas.value = selected;
+                                  }
                                 },
-                                items: const [
-                                  DropdownMenuItem(value: 'TODOS', child: Text('Todos')),
-                                  DropdownMenuItem(value: 'DIA', child: Text('Día')),
-                                  DropdownMenuItem(value: 'SEMANA', child: Text('Semana')),
-                                  DropdownMenuItem(value: 'MES', child: Text('Mes')),
-                                  DropdownMenuItem(value: 'AÑO', child: Text('Año')),
-                                ],
                               )),
                             ],
                           ),
@@ -377,6 +410,32 @@ class HomeView extends StatelessWidget {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  String _filtroLabel(String value) {
+    switch (value) {
+      case 'DIA': return 'Día';
+      case 'SEMANA': return 'Semana';
+      case 'MES': return 'Mes';
+      case 'AÑO': return 'Año';
+      case 'TODOS':
+      default: return 'Todos';
+    }
+  }
+
+  Widget _buildFiltroOption(BuildContext context, HomeController controller, String value, String label) {
+    final isSelected = controller.filtroReservas.value == value;
+    return SimpleDialogOption(
+      onPressed: () => Navigator.of(context).pop(value),
+      child: Row(
+        children: [
+          if (isSelected)
+            const Icon(Icons.check, color: Colors.blue, size: 18),
+          if (isSelected) const SizedBox(width: 8),
+          Text(label, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
         ],
       ),
     );

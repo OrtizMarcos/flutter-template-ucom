@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-Widget circleCard({String? image, String? title}) {
+Widget circleCard({String? image, String? title, IconData? icon}) {
   return Column(
     children: [
       Container(
@@ -20,21 +20,26 @@ Widget circleCard({String? image, String? title}) {
             color: HexColor(AppTheme.primaryColorString!).withOpacity(0.10),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 24,
-              width: 24,
-              child: SvgPicture.asset(
-                image!,
-                fit: BoxFit.fill,
-                color: AppTheme.isLightTheme == false
-                    ? Colors.white
-                    : HexColor(AppTheme.primaryColorString!),
-              ),
-            ),
-          ],
+        child: Center(
+          child: icon != null
+              ? Icon(
+                  icon,
+                  size: 32,
+                  color: AppTheme.isLightTheme == false
+                      ? Colors.white
+                      : HexColor(AppTheme.primaryColorString!),
+                )
+              : SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: SvgPicture.asset(
+                    image!,
+                    fit: BoxFit.fill,
+                    color: AppTheme.isLightTheme == false
+                        ? Colors.white
+                        : HexColor(AppTheme.primaryColorString!),
+                  ),
+                ),
         ),
       ),
       const SizedBox(
