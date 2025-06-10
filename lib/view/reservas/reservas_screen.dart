@@ -98,98 +98,169 @@ class ReservaScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildTimeInput(
-                                  context,
-                                  label: "Inicio",
-                                  value: controller.horarioInicio.value,
-                                  onTap: () async {
-                                    final date = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now().add(const Duration(days: 30)),
-                                    );
-                                    if (date == null) return;
-                                    final time = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                    );
-                                    if (time == null) return;
-                                    controller.horarioInicio.value = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      time.hour,
-                                      time.minute,
-                                    );
-                                  },
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _buildTimeInput(
-                                  context,
-                                  label: "Fin",
-                                  value: controller.horarioSalida.value,
-                                  onTap: () async {
-                                    final date = await showDatePicker(
-                                      context: context,
-                                      initialDate: controller.horarioInicio.value ?? DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now().add(const Duration(days: 30)),
-                                    );
-                                    if (date == null) return;
-                                    final time = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                    );
-                                    if (time == null) return;
-                                    controller.horarioSalida.value = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      time.hour,
-                                      time.minute,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            "Duración rápida",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [1, 2, 4, 6, 8].map((horas) {
-                              final seleccionada = controller.duracionSeleccionada.value == horas;
-                              return ChoiceChip(
-                                label: Text("$horas h"),
-                                selected: seleccionada,
-                                selectedColor: Theme.of(context).primaryColor,
-                                labelStyle: TextStyle(
-                                  color: seleccionada ? Colors.white : Colors.black87,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Botones principales
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          final time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          );
+                                          if (time == null) return;
+                                          
+                                          final now = DateTime.now();
+                                          controller.horarioInicio.value = DateTime(
+                                            now.year,
+                                            now.month,
+                                            now.day,
+                                            time.hour,
+                                            time.minute,
+                                          );
+                                        },
+                                        icon: const Icon(Icons.access_time),
+                                        label: const Text("Hora Hoy"),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(context).primaryColor,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime.now().add(const Duration(days: 30)),
+                                          );
+                                          if (date == null) return;
+                                          
+                                          final time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          );
+                                          if (time == null) return;
+                                          
+                                          controller.horarioInicio.value = DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            time.hour,
+                                            time.minute,
+                                          );
+                                        },
+                                        icon: const Icon(Icons.calendar_today),
+                                        label: const Text("Fecha y Hora"),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(context).primaryColor,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                onSelected: (_) {
-                                  controller.duracionSeleccionada.value = horas;
-                                  final inicio = controller.horarioInicio.value ?? DateTime.now();
-                                  controller.horarioInicio.value = inicio;
-                                  controller.horarioSalida.value = inicio.add(Duration(hours: horas));
-                                },
-                              );
-                            }).toList(),
+                                
+                                if (controller.horarioInicio.value != null) ...[
+                                  const SizedBox(height: 16),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor.withOpacity(0.05),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Inicio",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            Text(
+                                              "${UtilesApp.formatearFechaDdMMAaaa(controller.horarioInicio.value!)} ${TimeOfDay.fromDateTime(controller.horarioInicio.value!).format(context)}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ElevatedButton.icon(
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text("Seleccionar duración"),
+                                                content: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: List.generate(9, (index) {
+                                                    final horas = index + 1;
+                                                    return ListTile(
+                                                      title: Text("$horas ${horas == 1 ? 'hora' : 'horas'}"),
+                                                      onTap: () {
+                                                        controller.duracionSeleccionada.value = horas;
+                                                        controller.horarioSalida.value = controller.horarioInicio.value!.add(
+                                                          Duration(hours: horas)
+                                                        );
+                                                        Get.back();
+                                                      },
+                                                    );
+                                                  }),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.schedule),
+                                          label: const Text("Seleccionar duración"),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Theme.of(context).primaryColor,
+                                            foregroundColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -231,7 +302,7 @@ class ReservaScreen extends StatelessWidget {
                             context,
                             icon: Icons.layers,
                             title: "Piso",
-                            child: DropdownButtonFormField<Piso>(
+                            child: Obx(() => DropdownButtonFormField<Piso>(
                               isExpanded: true,
                               value: controller.pisoSeleccionado.value,
                               decoration: InputDecoration(
@@ -245,92 +316,106 @@ class ReservaScreen extends StatelessWidget {
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               ),
                               hint: const Text("Seleccionar piso"),
-                              onChanged: (p) => controller.seleccionarPiso(p!),
-                              items: controller.pisos
-                                  .map((p) => DropdownMenuItem(
-                                      value: p, child: Text(p.descripcion)))
-                                  .toList(),
-                            ),
+                              onChanged: (p) {
+                                if (p != null) {
+                                  controller.seleccionarPiso(p);
+                                }
+                              },
+                              items: controller.pisos.map((p) => DropdownMenuItem(
+                                value: p,
+                                child: Text(p.descripcion),
+                              )).toList(),
+                            )),
                           ),
                           const SizedBox(height: 16),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 5,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            children: controller.lugaresDisponibles
-                                .where((l) =>
-                                    l.codigoPiso ==
-                                    controller.pisoSeleccionado.value?.codigo)
-                                .map((lugar) {
-                              final seleccionado =
-                                  lugar == controller.lugarSeleccionado.value;
-                              final isReservado = lugar.estado == "RESERVADO";
-
-                              return GestureDetector(
-                                onTap: lugar.estado == "DISPONIBLE"
-                                    ? () => controller.lugarSeleccionado.value = lugar
-                                    : null,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: isReservado
-                                        ? Colors.red.shade100
-                                        : seleccionado
-                                            ? Theme.of(context).primaryColor.withOpacity(0.1)
-                                            : Colors.white,
-                                    border: Border.all(
-                                      color: isReservado
-                                          ? Colors.red.shade300
-                                          : seleccionado
-                                              ? Theme.of(context).primaryColor
-                                              : Colors.grey.shade300,
-                                      width: seleccionado ? 2 : 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: (isReservado
-                                                ? Colors.red
-                                                : seleccionado
-                                                    ? Theme.of(context).primaryColor
-                                                    : Colors.grey)
-                                            .withOpacity(0.1),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        lugar.codigoLugar,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: isReservado
-                                              ? Colors.red.shade700
-                                              : seleccionado
-                                                  ? Theme.of(context).primaryColor
-                                                  : Colors.black87,
-                                        ),
-                                      ),
-                                      if (isReservado) ...[
-                                        const SizedBox(height: 4),
-                                        Icon(
-                                          Icons.lock,
-                                          size: 14,
-                                          color: Colors.red.shade400
-                                        ),
-                                      ],
-                                    ],
-                                  ),
+                          Obx(() {
+                            final lugaresDelPiso = controller.lugaresDisponibles
+                                .where((l) => l.codigoPiso == controller.pisoSeleccionado.value?.codigo)
+                                .toList();
+                            
+                            if (lugaresDelPiso.isEmpty) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Text("Selecciona un piso para ver los lugares disponibles"),
                                 ),
                               );
-                            }).toList(),
-                          ),
+                            }
+
+                            return GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: 5,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              children: lugaresDelPiso.map((lugar) {
+                                final seleccionado = lugar == controller.lugarSeleccionado.value;
+                                final isReservado = lugar.estado == "RESERVADO";
+
+                                return GestureDetector(
+                                  onTap: lugar.estado == "DISPONIBLE"
+                                      ? () => controller.lugarSeleccionado.value = lugar
+                                      : null,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: isReservado
+                                          ? Colors.red.shade100
+                                          : seleccionado
+                                              ? Theme.of(context).primaryColor.withOpacity(0.1)
+                                              : Colors.white,
+                                      border: Border.all(
+                                        color: isReservado
+                                            ? Colors.red.shade300
+                                            : seleccionado
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.grey.shade300,
+                                        width: seleccionado ? 2 : 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: (isReservado
+                                                  ? Colors.red
+                                                  : seleccionado
+                                                      ? Theme.of(context).primaryColor
+                                                      : Colors.grey)
+                                              .withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          lugar.codigoLugar,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: isReservado
+                                                ? Colors.red.shade700
+                                                : seleccionado
+                                                    ? Theme.of(context).primaryColor
+                                                    : Colors.black87,
+                                          ),
+                                        ),
+                                        if (isReservado) ...[
+                                          const SizedBox(height: 4),
+                                          Icon(
+                                            Icons.lock,
+                                            size: 14,
+                                            color: Colors.red.shade400
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -361,103 +446,119 @@ class ReservaScreen extends StatelessWidget {
                   Obx(() {
                     final inicio = controller.horarioInicio.value;
                     final salida = controller.horarioSalida.value;
-                    if (inicio == null || salida == null) return const SizedBox();
+                    final piso = controller.pisoSeleccionado.value;
+                    final lugar = controller.lugarSeleccionado.value;
+                    final auto = controller.autoSeleccionado.value;
+
+                    final todosLosCamposCompletos = inicio != null && 
+                        salida != null && 
+                        piso != null && 
+                        lugar != null && 
+                        auto != null;
+
+                    if (!todosLosCamposCompletos) {
+                      return const SizedBox();
+                    }
 
                     final minutos = salida.difference(inicio).inMinutes;
                     final horas = minutos / 60;
                     final monto = (horas * 10000).round();
 
-                    return Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Monto a pagar",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "₲${UtilesApp.formatearGuaranies(monto)}",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Text(
-                                "Monto a pagar",
+                                "${horas.toStringAsFixed(1)} horas",
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "₲${UtilesApp.formatearGuaranies(monto)}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
                             ],
                           ),
-                          Text(
-                            "${horas.toStringAsFixed(1)} horas",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
+                            ),
+                            onPressed: () async {
+                              final confirmada = await controller.confirmarReserva();
+                              if (confirmada) {
+                                Get.snackbar(
+                                  "Reserva",
+                                  "Reserva realizada con éxito",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: Colors.green.shade100,
+                                  colorText: Colors.green.shade900,
+                                  margin: const EdgeInsets.all(16),
+                                  borderRadius: 12,
+                                );
+                                await Future.delayed(const Duration(milliseconds: 2000));
+                                final homeController = Get.find<HomeController>();
+                                await homeController.cargarReservasActivas();
+                                Get.back();
+                              } else {
+                                Get.snackbar(
+                                  "Error",
+                                  "Verificá que todos los campos estén completos",
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: Colors.red.shade100,
+                                  colorText: Colors.red.shade900,
+                                  margin: const EdgeInsets.all(16),
+                                  borderRadius: 12,
+                                );
+                              }
+                            },
+                            child: const Text(
+                              "Reservar",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   }),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      onPressed: () async {
-                        final confirmada = await controller.confirmarReserva();
-                        if (confirmada) {
-                          Get.snackbar(
-                            "Reserva",
-                            "Reserva realizada con éxito",
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.green.shade100,
-                            colorText: Colors.green.shade900,
-                            margin: const EdgeInsets.all(16),
-                            borderRadius: 12,
-                          );
-                          await Future.delayed(const Duration(milliseconds: 2000));
-                          final homeController = Get.find<HomeController>();
-                          await homeController.cargarReservasActivas();
-                          Get.back();
-                        } else {
-                          Get.snackbar(
-                            "Error",
-                            "Verificá que todos los campos estén completos",
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Colors.red.shade100,
-                            colorText: Colors.red.shade900,
-                            margin: const EdgeInsets.all(16),
-                            borderRadius: 12,
-                          );
-                        }
-                      },
-                      child: const Text(
-                        "Reservar",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

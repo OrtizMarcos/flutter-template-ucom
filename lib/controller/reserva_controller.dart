@@ -37,8 +37,7 @@ class ReservaController extends GetxController {
     // Unir pisos con sus lugares correspondientes
     pisos.value = rawPisos.map((pJson) {
       final codigoPiso = pJson['codigo'];
-      final lugaresDelPiso =
-          todosLugares.where((l) => l.codigoPiso == codigoPiso).toList();
+      final lugaresDelPiso = todosLugares.where((l) => l.codigoPiso == codigoPiso).toList();
 
       return Piso(
         codigo: codigoPiso,
@@ -47,18 +46,19 @@ class ReservaController extends GetxController {
       );
     }).toList();
 
-    // Inicializar lugares disponibles (solo los no reservados)
-    lugaresDisponibles.value = todosLugares.where((l) {
-      return !lugaresReservados.contains(l.codigoLugar);
-    }).toList();
+    // Inicializar lugares disponibles (todos los lugares)
+    lugaresDisponibles.value = todosLugares;
   }
 
   Future<void> seleccionarPiso(Piso piso) {
     pisoSeleccionado.value = piso;
     lugarSeleccionado.value = null;
 
-    // filtrar lugares de este piso
-    lugaresDisponibles.refresh();
+    // Filtrar lugares disponibles del piso seleccionado
+    lugaresDisponibles.value = piso.lugares.where((lugar) => 
+      lugar.estado == "DISPONIBLE"
+    ).toList();
+    
     return Future.value();
   }
 
