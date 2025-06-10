@@ -264,7 +264,7 @@ class HomeView extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 20),
+                              left: 16, right: 16, top: 20, bottom: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -278,14 +278,33 @@ class HomeView extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                     ),
                               ),
+                              Obx(() => DropdownButton<String>(
+                                value: homeController.filtroReservas.value,
+                                onChanged: (value) {
+                                  if (value != null) homeController.filtroReservas.value = value;
+                                },
+                                items: const [
+                                  DropdownMenuItem(value: 'TODOS', child: Text('Todos')),
+                                  DropdownMenuItem(value: 'DIA', child: Text('Día')),
+                                  DropdownMenuItem(value: 'SEMANA', child: Text('Semana')),
+                                  DropdownMenuItem(value: 'MES', child: Text('Mes')),
+                                  DropdownMenuItem(value: 'AÑO', child: Text('Año')),
+                                ],
+                              )),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
                         Obx(() {
+                          final reservas = homeController.reservasFiltradas;
+                          if (reservas.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text("No hay reservas pendientes en este periodo"),
+                            );
+                          }
                           return Column(
-                            children:
-                                homeController.reservasActivas.map((reserva) {
+                            children: reservas.map((reserva) {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: InkWell(
@@ -354,7 +373,7 @@ class HomeView extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           )
