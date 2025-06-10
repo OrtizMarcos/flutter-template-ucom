@@ -269,7 +269,7 @@ class HomeView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Pagos previos",
+                                "Reservas Pendientes",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -288,67 +288,63 @@ class HomeView extends StatelessWidget {
                                 homeController.reservasActivas.map((reserva) {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
-                                child: ListTile(
-                                  leading: const Icon(Icons.local_parking),
-                                  title:
-                                      Text("Reserva: ${reserva.codigoReserva}"),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Auto: ${reserva.chapaAuto}"),
-                                      if (reserva.horarioInicio.day ==
-                                          reserva.horarioSalida.day)
+                                child: InkWell(
+                                  onTap: reserva.estadoReserva == "PENDIENTE"
+                                      ? () {
+                                          Get.to(() => PagoScreen(), arguments: reserva);
+                                        }
+                                      : null,
+                                  child: ListTile(
+                                    leading: const Icon(Icons.local_parking),
+                                    title: Text("Reserva: ${reserva.codigoReserva}"),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Auto: ${reserva.chapaAuto}"),
+                                        if (reserva.horarioInicio.day == reserva.horarioSalida.day)
+                                          Text("Duración: ${(reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round()} horas")
+                                        else
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Inicio: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)}"),
+                                              Text("Fin: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)}"),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
                                         Text(
-                                            "Duración: ${(reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round()} horas")
-                                      else
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                "Inicio: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)}"),
-                                            Text(
-                                                "Fin: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)}"),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "₲${UtilesApp.formatearGuaranies(reserva.monto)}",
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: reserva.estadoReserva ==
-                                                  "PENDIENTE"
-                                              ? Colors.orange.withOpacity(0.2)
-                                              : Colors.green.withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        child: Text(
-                                          reserva.estadoReserva,
+                                          "₲${UtilesApp.formatearGuaranies(reserva.monto)}",
                                           style: TextStyle(
-                                            color: reserva.estadoReserva ==
-                                                    "PENDIENTE"
-                                                ? Colors.orange
-                                                : Colors.green,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: reserva.estadoReserva == "PENDIENTE"
+                                                ? Colors.orange.withOpacity(0.2)
+                                                : Colors.green.withOpacity(0.2),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: Text(
+                                            reserva.estadoReserva,
+                                            style: TextStyle(
+                                              color: reserva.estadoReserva == "PENDIENTE"
+                                                  ? Colors.orange
+                                                  : Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
