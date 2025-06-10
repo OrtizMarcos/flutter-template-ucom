@@ -54,10 +54,8 @@ class ReservaController extends GetxController {
     pisoSeleccionado.value = piso;
     lugarSeleccionado.value = null;
 
-    // Filtrar lugares disponibles del piso seleccionado
-    lugaresDisponibles.value = piso.lugares.where((lugar) => 
-      lugar.estado == "DISPONIBLE"
-    ).toList();
+    // Mostrar todos los lugares del piso, incluyendo los reservados
+    lugaresDisponibles.value = piso.lugares;
     
     return Future.value();
   }
@@ -121,6 +119,7 @@ class ReservaController extends GetxController {
     horarioInicio.value = null;
     horarioSalida.value = null;
     duracionSeleccionada.value = 0;
+    autoSeleccionado.value = null;
   }
 
   Future<void> cargarAutosDelCliente() async {

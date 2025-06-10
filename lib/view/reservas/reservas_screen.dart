@@ -456,105 +456,135 @@ class ReservaScreen extends StatelessWidget {
                         lugar != null && 
                         auto != null;
 
-                    if (!todosLosCamposCompletos) {
-                      return const SizedBox();
-                    }
-
-                    final minutos = salida.difference(inicio).inMinutes;
-                    final horas = minutos / 60;
-                    final monto = (horas * 10000).round();
-
                     return Column(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
+                        if (todosLosCamposCompletos) ...[
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Monto a pagar",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "₲${UtilesApp.formatearGuaranies((salida.difference(inicio).inMinutes / 60 * 10000).round())}",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "${(salida.difference(inicio).inMinutes / 60).toStringAsFixed(1)} horas",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Monto a pagar",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
+                          const SizedBox(height: 16),
+                        ],
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[200],
+                                  foregroundColor: Colors.grey[800],
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "₲${UtilesApp.formatearGuaranies(monto)}",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
+                                  elevation: 0,
+                                ),
+                                onPressed: () {
+                                  controller.resetearCampos();
+                                  Get.snackbar(
+                                    "Cancelado",
+                                    "Se han limpiado todos los datos",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: Colors.grey[200],
+                                    colorText: Colors.grey[800],
+                                    margin: const EdgeInsets.all(16),
+                                    borderRadius: 12,
+                                  );
+                                },
+                                child: const Text(
+                                  "Cancelar",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                              Text(
-                                "${horas.toStringAsFixed(1)} horas",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
                             ),
-                            onPressed: () async {
-                              final confirmada = await controller.confirmarReserva();
-                              if (confirmada) {
-                                Get.snackbar(
-                                  "Reserva",
-                                  "Reserva realizada con éxito",
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: Colors.green.shade100,
-                                  colorText: Colors.green.shade900,
-                                  margin: const EdgeInsets.all(16),
-                                  borderRadius: 12,
-                                );
-                                await Future.delayed(const Duration(milliseconds: 2000));
-                                final homeController = Get.find<HomeController>();
-                                await homeController.cargarReservasActivas();
-                                Get.back();
-                              } else {
-                                Get.snackbar(
-                                  "Error",
-                                  "Verificá que todos los campos estén completos",
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Colors.red.shade100,
-                                  colorText: Colors.red.shade900,
-                                  margin: const EdgeInsets.all(16),
-                                  borderRadius: 12,
-                                );
-                              }
-                            },
-                            child: const Text(
-                              "Reservar",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                onPressed: todosLosCamposCompletos ? () async {
+                                  final confirmada = await controller.confirmarReserva();
+                                  if (confirmada) {
+                                    Get.snackbar(
+                                      "Reserva",
+                                      "Reserva realizada con éxito",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green.shade100,
+                                      colorText: Colors.green.shade900,
+                                      margin: const EdgeInsets.all(16),
+                                      borderRadius: 12,
+                                    );
+                                    await Future.delayed(const Duration(milliseconds: 2000));
+                                    final homeController = Get.find<HomeController>();
+                                    await homeController.cargarReservasActivas();
+                                    Get.back();
+                                  } else {
+                                    Get.snackbar(
+                                      "Error",
+                                      "Verificá que todos los campos estén completos",
+                                      snackPosition: SnackPosition.TOP,
+                                      backgroundColor: Colors.red.shade100,
+                                      colorText: Colors.red.shade900,
+                                      margin: const EdgeInsets.all(16),
+                                      borderRadius: 12,
+                                    );
+                                  }
+                                } : null,
+                                child: const Text(
+                                  "Reservar",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     );
