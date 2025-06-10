@@ -59,4 +59,22 @@ class PagoController extends GetxController {
       return false;
     }
   }
+
+  Future<void> eliminarReserva(Reserva reserva) async {
+    try {
+      // Eliminar la reserva de la base de datos
+      final reservas = await db.getAll("reservas.json");
+      reservas.removeWhere((r) => r['codigoReserva'] == reserva.codigoReserva);
+      await db.saveAll("reservas.json", reservas);
+
+      // Actualizar la lista local
+      await cargarReservasPendientes();
+
+      // Actualizar el HomeController
+      final homeController = Get.find<HomeController>();
+      await homeController.cargarReservasActivas();
+    } catch (e) {
+      print("Error al eliminar reserva: $e");
+    }
+  }
 }
