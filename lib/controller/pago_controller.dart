@@ -67,6 +67,16 @@ class PagoController extends GetxController {
       reservas.removeWhere((r) => r['codigoReserva'] == reserva.codigoReserva);
       await db.saveAll("reservas.json", reservas);
 
+      // Liberar SOLO el lugar asociado a la reserva
+      final lugares = await db.getAll("lugares.json");
+      for (var lugar in lugares) {
+        if (lugar['codigoLugar'] == reserva.codigoLugar) {
+          lugar['estado'] = 'DISPONIBLE';
+          break;
+        }
+      }
+      await db.saveAll("lugares.json", lugares);
+
       // Actualizar la lista local
       await cargarReservasPendientes();
 

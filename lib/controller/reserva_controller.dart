@@ -84,6 +84,7 @@ class ReservaController extends GetxController {
       monto: montoCalculado,
       estadoReserva: "PENDIENTE",
       chapaAuto: autoSeleccionado.value!.chapa,
+      codigoLugar: lugarSeleccionado.value!.codigoLugar,
     );
 
     try {
