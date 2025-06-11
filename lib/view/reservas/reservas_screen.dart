@@ -346,77 +346,77 @@ class ReservaScreen extends StatelessWidget {
                             }
 
                             return GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: 5,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 5,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
                               children: lugaresDelPiso.map((lugar) {
                                 final seleccionado = lugar == controller.lugarSeleccionado.value;
-                                final isReservado = lugar.estado == "RESERVADO";
+                              final isReservado = lugar.estado == "RESERVADO";
 
-                                return GestureDetector(
-                                  onTap: lugar.estado == "DISPONIBLE"
-                                      ? () => controller.lugarSeleccionado.value = lugar
-                                      : null,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
+                              return GestureDetector(
+                                onTap: lugar.estado == "DISPONIBLE"
+                                    ? () => controller.lugarSeleccionado.value = lugar
+                                    : null,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: isReservado
+                                        ? Colors.red.shade100
+                                        : seleccionado
+                                            ? Theme.of(context).primaryColor.withOpacity(0.1)
+                                            : Colors.white,
+                                    border: Border.all(
                                       color: isReservado
-                                          ? Colors.red.shade100
+                                          ? Colors.red.shade300
                                           : seleccionado
-                                              ? Theme.of(context).primaryColor.withOpacity(0.1)
-                                              : Colors.white,
-                                      border: Border.all(
-                                        color: isReservado
-                                            ? Colors.red.shade300
-                                            : seleccionado
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey.shade300,
-                                        width: seleccionado ? 2 : 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: (isReservado
-                                                  ? Colors.red
-                                                  : seleccionado
-                                                      ? Theme.of(context).primaryColor
-                                                      : Colors.grey)
-                                              .withOpacity(0.1),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.grey.shade300,
+                                      width: seleccionado ? 2 : 1,
                                     ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          lugar.codigoLugar,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: isReservado
-                                                ? Colors.red.shade700
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: (isReservado
+                                                ? Colors.red
                                                 : seleccionado
                                                     ? Theme.of(context).primaryColor
-                                                    : Colors.black87,
-                                          ),
-                                        ),
-                                        if (isReservado) ...[
-                                          const SizedBox(height: 4),
-                                          Icon(
-                                            Icons.lock,
-                                            size: 14,
-                                            color: Colors.red.shade400
-                                          ),
-                                        ],
-                                      ],
-                                    ),
+                                                    : Colors.grey)
+                                            .withOpacity(0.1),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }).toList(),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        lugar.codigoLugar,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: isReservado
+                                              ? Colors.red.shade700
+                                              : seleccionado
+                                                  ? Theme.of(context).primaryColor
+                                                  : Colors.black87,
+                                        ),
+                                      ),
+                                      if (isReservado) ...[
+                                        const SizedBox(height: 4),
+                                        Icon(
+                                          Icons.lock,
+                                          size: 14,
+                                          color: Colors.red.shade400
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                             );
                           }),
                         ],
@@ -463,44 +463,44 @@ class ReservaScreen extends StatelessWidget {
                       children: [
                         if (todosLosCamposCompletos) ...[
                           Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Monto a pagar",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Monto a pagar",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
                                       "₲${UtilesApp.formatearGuaranies((salida.difference(inicio).inMinutes / 60 * 10000).round())}",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                  ],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                                Text(
+                              ),
+                            ],
+                          ),
+                          Text(
                                   "${(salida.difference(inicio).inMinutes / 60).toStringAsFixed(1)} horas",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
                             ),
+                          ),
+                        ],
+                      ),
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -540,53 +540,53 @@ class ReservaScreen extends StatelessWidget {
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 0,
-                                ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
                                 onPressed: todosLosCamposCompletos ? () async {
-                                  final confirmada = await controller.confirmarReserva();
-                                  if (confirmada) {
-                                    Get.snackbar(
-                                      "Reserva",
-                                      "Reserva realizada con éxito",
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green.shade100,
-                                      colorText: Colors.green.shade900,
-                                      margin: const EdgeInsets.all(16),
-                                      borderRadius: 12,
-                                    );
-                                    await Future.delayed(const Duration(milliseconds: 2000));
-                                    final homeController = Get.find<HomeController>();
-                                    await homeController.cargarReservasActivas();
+                        final confirmada = await controller.confirmarReserva();
+                        if (confirmada) {
+                          Get.snackbar(
+                            "Reserva",
+                            "Reserva realizada con éxito",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green.shade100,
+                            colorText: Colors.green.shade900,
+                            margin: const EdgeInsets.all(16),
+                            borderRadius: 12,
+                          );
+                          await Future.delayed(const Duration(milliseconds: 2000));
+                          final homeController = Get.find<HomeController>();
+                          await homeController.cargarReservasActivas();
                                     Get.offAll(() => const TabScreen());
-                                  } else {
-                                    Get.snackbar(
-                                      "Error",
-                                      "Verificá que todos los campos estén completos",
-                                      snackPosition: SnackPosition.TOP,
-                                      backgroundColor: Colors.red.shade100,
-                                      colorText: Colors.red.shade900,
-                                      margin: const EdgeInsets.all(16),
-                                      borderRadius: 12,
-                                    );
-                                  }
+                        } else {
+                          Get.snackbar(
+                            "Error",
+                            "Verificá que todos los campos estén completos",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.red.shade100,
+                            colorText: Colors.red.shade900,
+                            margin: const EdgeInsets.all(16),
+                            borderRadius: 12,
+                          );
+                        }
                                 } : null,
-                                child: const Text(
-                                  "Reservar",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                      child: const Text(
+                        "Reservar",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                           ],
                         ),
                       ],

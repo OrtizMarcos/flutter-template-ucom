@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/autos_controller.dart';
 import '../../model/sitema_reservas.dart';
+import '../../theme/app_theme.dart';
+import '../../utils/hex_color.dart';
 
 class AutosScreen extends StatelessWidget {
   final controller = Get.put(AutosController());
@@ -11,9 +13,62 @@ class AutosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.isLightTheme == false
+          ? const Color(0xff211F32)
+          : const Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('Mis Autos'),
-        centerTitle: true,
+        backgroundColor: AppTheme.isLightTheme == false
+            ? const Color(0xff211F32)
+            : const Color(0xffFFFFFF),
+        elevation: 0,
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.isLightTheme == false
+                  ? const Color(0xff211F32)
+                  : const Color(0xffFFFFFF),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.arrow_back,
+              color: AppTheme.isLightTheme == false
+                  ? Colors.white
+                  : const Color(0xff000000),
+            ),
+          ),
+        ),
+        title: Text(
+          "Mis Autos",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: HexColor(AppTheme.primaryColorString!).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Obx(() => Text(
+                  "Total: ${controller.totalAutos.value}",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: HexColor(AppTheme.primaryColorString!),
+                    fontWeight: FontWeight.w600,
+                  ),
+                )),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         if (controller.autosCliente.isEmpty) {

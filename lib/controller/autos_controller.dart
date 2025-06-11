@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class AutosController extends GetxController {
   final db = LocalDBService();
   RxList<Auto> autosCliente = <Auto>[].obs;
+  RxInt totalAutos = 0.obs;
   String codigoClienteActual = 'cliente_1'; // Simulación de cliente actual
 
   @override
@@ -18,6 +19,7 @@ class AutosController extends GetxController {
     final rawAutos = await db.getAll("autos.json");
     final autos = rawAutos.map((e) => Auto.fromJson(e)).toList();
     autosCliente.value = autos.where((a) => a.clienteId == codigoClienteActual).toList();
+    totalAutos.value = autosCliente.length;
   }
 
   Future<void> agregarOEditarAuto(Auto auto, {Auto? anterior}) async {
@@ -47,6 +49,7 @@ class AutosController extends GetxController {
     final _marca = TextEditingController(text: auto?.marca ?? '');
     final _modelo = TextEditingController(text: auto?.modelo ?? '');
     final _chasis = TextEditingController(text: auto?.chasis ?? '');
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -81,7 +84,16 @@ class AutosController extends GetxController {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_chapa.text.isEmpty || _marca.text.isEmpty || _modelo.text.isEmpty || _chasis.text.isEmpty) return;
+              if (_chapa.text.isEmpty || _marca.text.isEmpty || _modelo.text.isEmpty || _chasis.text.isEmpty) {
+                Get.snackbar(
+                  'Error',
+                  'Todos los campos son obligatorios',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red.shade100,
+                  colorText: Colors.red.shade900,
+                );
+                return;
+              }
               final nuevoAuto = Auto(
                 chapa: _chapa.text,
                 marca: _marca.text,

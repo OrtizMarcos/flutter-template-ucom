@@ -133,103 +133,103 @@ class PagoScreen extends StatelessWidget {
                   return false;
                 },
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Reserva #${reserva.codigoReserva}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                margin: const EdgeInsets.only(bottom: 16),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Reserva #${reserva.codigoReserva}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.orange.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Text(
-                                "PENDIENTE",
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            const Icon(Icons.directions_car, size: 16),
-                            const SizedBox(width: 8),
-                            Text(
-                              "Auto: ${reserva.chapaAuto}",
-                              style: const TextStyle(fontSize: 14),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(Icons.access_time, size: 16),
-                            const SizedBox(width: 8),
-                            Text(
-                              "Inicio: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)}",
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(Icons.timer_off, size: 16),
-                            const SizedBox(width: 8),
-                            Text(
-                              "Fin: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)}",
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Monto a pagar:",
+                            child: const Text(
+                              "PENDIENTE",
                               style: TextStyle(
-                                fontSize: 16,
+                                color: Colors.orange,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
                               ),
                             ),
-                            Text(
-                              "₲${UtilesApp.formatearGuaranies(reserva.monto)}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          const Icon(Icons.directions_car, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Auto: ${reserva.chapaAuto}",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.access_time, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Inicio: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)}",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.timer_off, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Fin: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)}",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Monto a pagar:",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          Text(
+                            "₲${UtilesApp.formatearGuaranies(reserva.monto)}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                                  ),
+                                ],
+                              ),
                   ),
                 ),
               );
