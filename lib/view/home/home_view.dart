@@ -19,6 +19,12 @@ import '../autos/autos_screen.dart';
 class HomeView extends StatelessWidget {
   final HomeController homeController;
 
+  // Variables reactivas para controlar la expansión y filtros
+  final RxBool pendientesExpandido = true.obs;
+  final RxBool pagadasExpandido = false.obs;
+  final RxString filtroPendientes = 'TODOS'.obs;
+  final RxString filtroPagadas = 'TODOS'.obs;
+
   const HomeView({Key? key, required this.homeController}) : super(key: key);
 
   @override
@@ -261,150 +267,75 @@ class HomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 50),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppTheme.isLightTheme == false
-                          ? const Color(0xff211F32)
-                          : const Color(0xffFFFFFF),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xff000000).withOpacity(0.10),
-                          blurRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 20, bottom: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Reservas Pendientes",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                              ),
-                              Obx(() => ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                icon: const Icon(Icons.filter_list),
-                                label: Text(_filtroLabel(homeController.filtroReservas.value)),
-                                onPressed: () async {
-                                  final selected = await showDialog<String>(
-                                    context: context,
-                                    builder: (context) => SimpleDialog(
-                                      title: const Text('Filtrar reservas'),
-                                      children: [
-                                        _buildFiltroOption(context, homeController, 'TODOS', 'Todos'),
-                                        _buildFiltroOption(context, homeController, 'DIA', 'Día'),
-                                        _buildFiltroOption(context, homeController, 'SEMANA', 'Semana'),
-                                        _buildFiltroOption(context, homeController, 'MES', 'Mes'),
-                                        _buildFiltroOption(context, homeController, 'AÑO', 'Año'),
-                                      ],
-                                    ),
-                                  );
-                                  if (selected != null) {
-                                    homeController.filtroReservas.value = selected;
-                                  }
-                                },
-                              )),
-                            ],
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Reservas",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                      ),
+                      const SizedBox(height: 15),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme.isLightTheme == false
+                              ? const Color(0xff211F32)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: HexColor(AppTheme.primaryColorString!)
+                                .withOpacity(0.1),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Obx(() {
-                          final reservas = homeController.reservasFiltradas;
-                          if (reservas.isEmpty) {
-                            return const Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Text("No hay reservas pendientes en este periodo"),
-                            );
-                          }
-                          return Column(
-                            children: reservas.map((reserva) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: InkWell(
-                                  onTap: reserva.estadoReserva == "PENDIENTE"
-                                      ? () {
-                                          Get.to(() => PagoScreen(), arguments: reserva);
-                                        }
-                                      : null,
-                                  child: ListTile(
-                                    leading: const Icon(Icons.local_parking),
-                                    title: Text("Reserva: ${reserva.codigoReserva}"),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Auto: ${reserva.chapaAuto}"),
-                                        if (reserva.horarioInicio.day == reserva.horarioSalida.day)
-                                          Text("Duración: ${(reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round()} horas")
-                                        else
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Inicio: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)}"),
-                                              Text("Fin: ${UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)}"),
-                                            ],
-                                          ),
-                                      ],
-                                    ),
-                                    trailing: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "₲${UtilesApp.formatearGuaranies(reserva.monto)}",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                          decoration: BoxDecoration(
-                                            color: reserva.estadoReserva == "PENDIENTE"
-                                                ? Colors.orange.withOpacity(0.2)
-                                                : Colors.green.withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Text(
-                                            reserva.estadoReserva,
-                                            style: TextStyle(
-                                              color: reserva.estadoReserva == "PENDIENTE"
-                                                  ? Colors.orange
-                                                  : Colors.green,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Obx(() {
+                            final pendientes = homeController.reservasActivas.where((r) => r.estadoReserva == 'PENDIENTE').toList();
+                            final pagadas = homeController.reservasActivas.where((r) => r.estadoReserva == 'PAGADO').toList();
+                            return Column(
+                              children: [
+                                _buildExpandableReservationSection(
+                                  context,
+                                  title: "Reservas Pendientes",
+                                  icon: Icons.pending_actions,
+                                  color: const Color(0xffF6A609),
+                                  count: pendientes.length,
+                                  expanded: pendientesExpandido.value,
+                                  onTap: () {
+                                    pendientesExpandido.value = true;
+                                    pagadasExpandido.value = false;
+                                  },
+                                  filtro: filtroPendientes.value,
+                                  onFiltroChanged: (nuevo) => filtroPendientes.value = nuevo,
+                                  reservas: pendientes,
                                 ),
-                              );
-                            }).toList(),
-                          );
-                        }),
-                      ],
-                    ),
+                                const SizedBox(height: 16),
+                                const Divider(),
+                                const SizedBox(height: 16),
+                                _buildExpandableReservationSection(
+                                  context,
+                                  title: "Reservas Pagadas",
+                                  icon: Icons.check_circle,
+                                  color: const Color(0xff4CAF50),
+                                  count: pagadas.length,
+                                  expanded: pagadasExpandido.value,
+                                  onTap: () {
+                                    pendientesExpandido.value = false;
+                                    pagadasExpandido.value = true;
+                                  },
+                                  filtro: filtroPagadas.value,
+                                  onFiltroChanged: (nuevo) => filtroPagadas.value = nuevo,
+                                  reservas: pagadas,
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -412,6 +343,200 @@ class HomeView extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildExpandableReservationSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required int count,
+    required bool expanded,
+    required VoidCallback onTap,
+    required String filtro,
+    required ValueChanged<String> onFiltroChanged,
+    required List reservas,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        count.toString(),
+                        style: TextStyle(
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      expanded ? Icons.expand_less : Icons.expand_more,
+                      color: color,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (expanded) ...[
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                icon: const Icon(Icons.filter_list),
+                label: Text(_filtroLabel(filtro)),
+                onPressed: () async {
+                  final selected = await showDialog<String>(
+                    context: context,
+                    builder: (context) => SimpleDialog(
+                      title: const Text('Filtrar reservas'),
+                      children: [
+                        _buildFiltroOption(context, filtro, 'TODOS', 'Todos', onFiltroChanged),
+                        _buildFiltroOption(context, filtro, 'DIA', 'Día', onFiltroChanged),
+                        _buildFiltroOption(context, filtro, 'SEMANA', 'Semana', onFiltroChanged),
+                        _buildFiltroOption(context, filtro, 'MES', 'Mes', onFiltroChanged),
+                        _buildFiltroOption(context, filtro, 'AÑO', 'Año', onFiltroChanged),
+                      ],
+                    ),
+                  );
+                  if (selected != null) {
+                    onFiltroChanged(selected);
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _buildReservasList(context, reservas, filtro),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildReservasList(BuildContext context, List reservas, String filtro) {
+    final ahora = DateTime.now();
+    List filtered = reservas;
+    if (filtro == 'DIA') {
+      filtered = reservas.where((r) => r.horarioInicio.year == ahora.year && r.horarioInicio.month == ahora.month && r.horarioInicio.day == ahora.day).toList();
+    } else if (filtro == 'SEMANA') {
+      final inicioSemana = ahora.subtract(Duration(days: ahora.weekday - 1));
+      final finSemana = inicioSemana.add(const Duration(days: 6));
+      filtered = reservas.where((r) => r.horarioInicio.isAfter(inicioSemana.subtract(const Duration(seconds: 1))) && r.horarioInicio.isBefore(finSemana.add(const Duration(days: 1)))).toList();
+    } else if (filtro == 'MES') {
+      filtered = reservas.where((r) => r.horarioInicio.year == ahora.year && r.horarioInicio.month == ahora.month).toList();
+    } else if (filtro == 'AÑO') {
+      filtered = reservas.where((r) => r.horarioInicio.year == ahora.year).toList();
+    }
+    if (filtered.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Text("No hay reservas en este periodo"),
+      );
+    }
+    return Column(
+      children: filtered.map<Widget>((reserva) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: ListTile(
+            leading: const Icon(Icons.local_parking),
+            title: Text("Reserva: "+reserva.codigoReserva),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Auto: "+reserva.chapaAuto),
+                if (reserva.horarioInicio.day == reserva.horarioSalida.day)
+                  Text("Duración: "+((reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round().toString())+" horas")
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Inicio: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)),
+                      Text("Fin: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)),
+                    ],
+                  ),
+              ],
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "₲"+UtilesApp.formatearGuaranies(reserva.monto),
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: reserva.estadoReserva == "PENDIENTE"
+                        ? Colors.orange.withOpacity(0.2)
+                        : Colors.green.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    reserva.estadoReserva,
+                    style: TextStyle(
+                      color: reserva.estadoReserva == "PENDIENTE"
+                          ? Colors.orange
+                          : Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -426,8 +551,8 @@ class HomeView extends StatelessWidget {
     }
   }
 
-  Widget _buildFiltroOption(BuildContext context, HomeController controller, String value, String label) {
-    final isSelected = controller.filtroReservas.value == value;
+  Widget _buildFiltroOption(BuildContext context, String current, String value, String label, ValueChanged<String> onFiltroChanged) {
+    final isSelected = current == value;
     return SimpleDialogOption(
       onPressed: () => Navigator.of(context).pop(value),
       child: Row(
