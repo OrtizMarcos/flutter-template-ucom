@@ -24,8 +24,9 @@ class HomeView extends StatelessWidget {
   final RxBool pagadasExpandido = false.obs;
   final RxString filtroPendientes = 'TODOS'.obs;
   final RxString filtroPagadas = 'TODOS'.obs;
+  final RxString reservaSeleccionada = ''.obs;
 
-  const HomeView({Key? key, required this.homeController}) : super(key: key);
+  HomeView({Key? key, required this.homeController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -479,65 +480,80 @@ class HomeView extends StatelessWidget {
         child: Text("No hay reservas en este periodo"),
       );
     }
-    return Column(
+    return Obx(() => Column(
       children: filtered.map<Widget>((reserva) {
+        final isPendiente = reserva.estadoReserva == "PENDIENTE";
+        final isSelected = reservaSeleccionada.value == reserva.codigoReserva;
         return Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: ListTile(
-            leading: const Icon(Icons.local_parking),
-            title: Text("Reserva: "+reserva.codigoReserva),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Auto: "+reserva.chapaAuto),
-                if (reserva.horarioInicio.day == reserva.horarioSalida.day)
-                  Text("Duración: "+((reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round().toString())+" horas")
-                else
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Inicio: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)),
-                      Text("Fin: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)),
-                    ],
-                  ),
-              ],
-            ),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "₲"+UtilesApp.formatearGuaranies(reserva.monto),
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: reserva.estadoReserva == "PENDIENTE"
-                        ? Colors.orange.withOpacity(0.2)
-                        : Colors.green.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    reserva.estadoReserva,
+          child: Material(
+            color: isSelected && isPendiente ? Colors.orange.withOpacity(0.15) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: ListTile(
+              leading: const Icon(Icons.local_parking),
+              title: Text("Reserva: "+reserva.codigoReserva),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Auto: "+reserva.chapaAuto),
+                  if (reserva.horarioInicio.day == reserva.horarioSalida.day)
+                    Text("Duración: "+((reserva.horarioSalida.difference(reserva.horarioInicio).inMinutes / 60).round().toString())+" horas")
+                  else
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Inicio: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioInicio)),
+                        Text("Fin: "+UtilesApp.formatearFechaDdMMAaaa(reserva.horarioSalida)),
+                      ],
+                    ),
+                ],
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "₲"+UtilesApp.formatearGuaranies(reserva.monto),
                     style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
                       color: reserva.estadoReserva == "PENDIENTE"
-                          ? Colors.orange
-                          : Colors.green,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                          ? Colors.orange.withOpacity(0.2)
+                          : Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      reserva.estadoReserva,
+                      style: TextStyle(
+                        color: reserva.estadoReserva == "PENDIENTE"
+                            ? Colors.orange
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+              onTap: isPendiente
+                  ? () {
+                      reservaSeleccionada.value = reserva.codigoReserva;
+                      Future.delayed(const Duration(milliseconds: 200), () {
+                        Get.to(() => PagoScreen(), arguments: reserva);
+                        reservaSeleccionada.value = '';
+                      });
+                    }
+                  : null,
             ),
           ),
         );
       }).toList(),
-    );
+    ));
   }
 
   String _filtroLabel(String value) {
